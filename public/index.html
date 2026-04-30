@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>타로 by MBTI</title>
+<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--mid:#0a0a1f;--navy:#1f1f42;--pd:#2d1b69;--pu:#4a3b8c;--gold:#d4af37;--gb:#f0c040;--gs:#b8941f;--cr:#f4ead5;--cd:#c8b88a;--ts:#b8b3d6;--td:#8a85a8;--red:#e85a5a;--grn:#5ab87f;--sans:'Pretendard',-apple-system,'Apple SD Gothic Neo',sans-serif;--serif:'Gowun Batang','Pretendard',serif;--disp:'Cinzel','Gowun Batang',serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh}
+body{font-family:var(--sans);font-size:17px;background:var(--mid);color:var(--cr);padding:40px 20px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at top,var(--pd) 0%,var(--mid) 60%),radial-gradient(2px 2px at 15% 20%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 70% 60%,rgba(255,255,255,.4),transparent);z-index:-1}
+.app{max-width:640px;margin:0 auto}
+.logo{text-align:center;margin-bottom:2.5rem;padding-bottom:1.75rem;border-bottom:1px solid rgba(212,175,55,.2);position:relative}
+.logo::after{content:'✦';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);background:var(--mid);color:var(--gold);padding:0 14px;font-size:16px}
+.logo-icon{font-size:48px;margin-bottom:.75rem;filter:drop-shadow(0 0 12px rgba(212,175,55,.4))}
+.logo h1{font-family:var(--disp);font-size:36px;font-weight:600;color:var(--gold);letter-spacing:5px;margin-bottom:8px}
+.logo p{font-family:var(--serif);font-size:17px;color:var(--cd);letter-spacing:2px}
+.box{background:linear-gradient(180deg,rgba(31,31,66,.6),rgba(21,21,46,.6));border:1px solid rgba(212,175,55,.15);border-radius:4px;padding:1.75rem 1.5rem;margin-bottom:1.25rem;position:relative;backdrop-filter:blur(10px)}
+.box::before,.box::after{content:'';position:absolute;width:14px;height:14px;border:1px solid var(--gold);opacity:.6}
+.box::before{top:-1px;left:-1px;border-right:none;border-bottom:none}
+.box::after{bottom:-1px;right:-1px;border-left:none;border-top:none}
+.slbl{font-family:var(--disp);font-size:13px;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:18px;font-weight:500;display:flex;align-items:center;gap:8px}
+.slbl::before{content:'◆';font-size:9px;opacity:.8}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mgl{font-family:var(--sans);font-size:13px;color:var(--cd);letter-spacing:.5px;margin-bottom:8px;font-weight:600}
+.mrow{display:flex;gap:8px}
+.mbtn{flex:1;padding:15px 4px;font-family:var(--disp);font-size:20px;font-weight:600;letter-spacing:1px;border:1px solid rgba(212,175,55,.2);border-radius:3px;background:rgba(0,0,0,.2);color:var(--td);cursor:pointer;transition:all .2s}
+.mbtn:hover{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,.08)}
+.mbtn.on{background:linear-gradient(135deg,var(--pd),var(--pu));border-color:var(--gold);color:var(--gb);box-shadow:0 0 16px rgba(212,175,55,.3);text-shadow:0 0 8px rgba(212,175,55,.5)}
+.mdisp{margin-top:18px;text-align:center;font-family:var(--disp);font-size:36px;font-weight:600;letter-spacing:16px;color:var(--td);padding:18px;background:rgba(0,0,0,.3);border-radius:3px;border:1px solid rgba(212,175,55,.1);transition:all .4s}
+.mdisp.done{color:var(--gb);border-color:var(--gold);text-shadow:0 0 12px rgba(212,175,55,.4)}
+.stabs{display:flex;gap:8px;flex-wrap:wrap}
+.stab{flex:1;min-width:140px;padding:14px 10px;border:1px solid rgba(212,175,55,.2);border-radius:3px;background:rgba(0,0,0,.2);color:var(--ts);cursor:pointer;transition:all .2s;font-family:var(--sans);display:flex;flex-direction:column;align-items:center;gap:5px}
+.stab:hover{border-color:var(--gs);color:var(--cr);background:rgba(212,175,55,.06)}
+.stab.on{background:linear-gradient(135deg,var(--pd),var(--pu));border-color:var(--gold);color:var(--gb);box-shadow:0 0 12px rgba(212,175,55,.25)}
+.stab .mn{font-size:15px;font-weight:700;white-space:nowrap}
+.stab .sb{font-size:13px;opacity:.75;white-space:nowrap}
+
+/* 질문 박스 - 상담 스타일 */
+.q-box{background:linear-gradient(180deg,rgba(31,31,66,.6),rgba(21,21,46,.6));border:1px solid rgba(212,175,55,.2);border-radius:4px;padding:1.75rem 1.5rem;margin-bottom:1.25rem;position:relative;backdrop-filter:blur(10px)}
+.q-box::before,.q-box::after{content:'';position:absolute;width:14px;height:14px;border:1px solid var(--gold);opacity:.6}
+.q-box::before{top:-1px;left:-1px;border-right:none;border-bottom:none}
+.q-box::after{bottom:-1px;right:-1px;border-left:none;border-top:none}
+.q-title{font-family:var(--disp);font-size:14px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;font-weight:500;display:flex;align-items:center;gap:8px}
+.q-title::before{content:'◆';font-size:9px;opacity:.8}
+.q-desc{font-family:var(--serif);font-size:15px;color:var(--cd);line-height:1.75;margin-bottom:16px;font-style:italic}
+.q-guide{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.q-guide-item{display:flex;align-items:flex-start;gap:8px;font-size:14px;color:var(--ts);font-family:var(--sans);line-height:1.6}
+.q-guide-item .icon{font-size:16px;flex-shrink:0;margin-top:1px}
+textarea{width:100%;border:1px solid rgba(212,175,55,.25);border-radius:3px;padding:16px 18px;font-size:16px;font-family:var(--serif);color:var(--cr);background:rgba(0,0,0,.35);resize:vertical;min-height:160px;outline:none;transition:border-color .2s;line-height:1.85}
+textarea::placeholder{color:var(--td);font-style:italic;line-height:1.8}
+textarea:focus{border-color:var(--gold);background:rgba(0,0,0,.45)}
+.q-tip{margin-top:10px;font-size:13px;color:var(--td);font-family:var(--sans);display:flex;align-items:center;gap:6px}
+
+.dnav{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:20px;padding:14px;background:rgba(0,0,0,.2);border-radius:4px;border:1px solid rgba(212,175,55,.1)}
+.darr{width:44px;height:44px;border-radius:50%;border:1px solid rgba(212,175,55,.3);background:rgba(0,0,0,.3);color:var(--gold);font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:var(--disp)}
+.darr:hover:not(:disabled){background:var(--gold);color:var(--mid);box-shadow:0 0 16px rgba(212,175,55,.4)}
+.darr:disabled{opacity:.25;cursor:not-allowed}
+.ddots{display:flex;gap:8px}
+.ddot{padding:10px 16px;border-radius:3px;border:1px solid rgba(212,175,55,.25);background:rgba(0,0,0,.2);color:var(--ts);font-family:var(--disp);font-size:16px;font-weight:600;cursor:pointer;transition:all .2s;min-width:48px;text-align:center;position:relative}
+.ddot:hover:not(.on){border-color:var(--gs);color:var(--cr)}
+.ddot.on{background:linear-gradient(135deg,var(--gs),var(--gold));color:var(--mid);border-color:var(--gold);box-shadow:0 0 12px rgba(212,175,55,.5)}
+.bdg{position:absolute;top:-7px;right:-7px;background:var(--red);color:#fff;font-size:11px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;border:1.5px solid var(--mid);font-family:var(--sans)}
+.ddot.on .bdg{background:var(--mid);color:var(--gold);border-color:var(--gold)}
+.flbl{font-family:var(--disp);font-size:17px;color:var(--gold);letter-spacing:1.5px;margin-bottom:6px;font-weight:500}
+.fsub{font-size:15px;color:var(--cd);margin-bottom:16px;font-family:var(--serif)}
+.hint{background:rgba(212,175,55,.05);border-left:2px solid var(--gold);padding:12px 16px;border-radius:0 3px 3px 0;margin-bottom:16px;font-size:14px;color:var(--cd);line-height:1.75}
+.fprog{text-align:center;font-size:15px;color:var(--cd);margin-bottom:14px}
+.fprog span{color:var(--gb);font-weight:700;font-size:18px;font-family:var(--disp)}
+.fwrap{position:relative;width:100%;height:240px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:8px}
+.fc{position:absolute;width:56px;height:92px;border-radius:5px;cursor:pointer;transform-origin:50% 145%;transition:transform .25s cubic-bezier(.4,0,.2,1),filter .2s,box-shadow .25s;bottom:16px;left:50%;margin-left:-28px;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.5);border:1px solid rgba(212,175,55,.4)}
+.fc svg,.fc img{width:100%;height:100%;display:block;pointer-events:none;object-fit:cover}
+.fc:hover:not(.used){z-index:200!important;filter:brightness(1.15);box-shadow:0 12px 28px rgba(212,175,55,.5)}
+.fc.used{cursor:default;opacity:.2;filter:grayscale(.7)}
+.slots{display:flex;gap:12px;margin-top:20px;justify-content:center}
+.slot{text-align:center;flex:1;max-width:130px}
+.slotl{font-family:var(--disp);font-size:13px;color:var(--cd);letter-spacing:1.5px;margin-bottom:10px;text-transform:uppercase;font-weight:500}
+.slotc{width:100%;aspect-ratio:2/3;border-radius:5px;background:rgba(0,0,0,.3);border:2px dashed rgba(212,175,55,.25);display:flex;align-items:center;justify-content:center;font-size:28px;color:rgba(212,175,55,.3);overflow:hidden;min-height:100px;transition:all .3s;position:relative}
+.slotc.on{border:1px solid var(--gold);background:rgba(0,0,0,.5);cursor:pointer;box-shadow:0 0 16px rgba(212,175,55,.2)}
+.slotc.on:hover{box-shadow:0 0 24px rgba(232,90,90,.4);border-color:var(--red)}
+.slotc.on:hover .cov{opacity:1}
+.slotc svg,.slotc img{width:100%;height:100%;display:block;object-fit:cover}
+.slotc.rev svg,.slotc.rev img{transform:rotate(180deg)}
+.cov{position:absolute;inset:0;background:rgba(232,90,90,.85);color:#fff;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;font-size:15px;font-weight:700;flex-direction:column;gap:4px;font-family:var(--sans)}
+.cov svg{width:26px;height:26px}
+.sname{font-size:13px;color:var(--cd);margin-top:8px;font-family:var(--serif);line-height:1.5}
+.gobtn{width:100%;padding:19px;font-family:var(--disp);font-size:17px;font-weight:600;letter-spacing:4px;border:1px solid var(--gold);border-radius:3px;background:linear-gradient(135deg,var(--pd),var(--pu));color:var(--gb);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:all .2s;text-transform:uppercase;margin-bottom:4px;position:relative;overflow:hidden}
+.gobtn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(212,175,55,.2),transparent);transform:translateX(-100%);transition:transform .6s}
+.gobtn:hover:not(:disabled){box-shadow:0 0 24px rgba(212,175,55,.4);text-shadow:0 0 8px rgba(212,175,55,.6)}
+.gobtn:hover:not(:disabled)::before{transform:translateX(100%)}
+.gobtn:disabled{opacity:.3;cursor:not-allowed}
+.pbadge{display:inline-flex;align-items:center;gap:6px;font-size:14px;padding:7px 20px;border-radius:99px;background:rgba(212,175,55,.1);color:var(--gold);border:1px solid rgba(212,175,55,.3);margin-bottom:.75rem;font-family:var(--disp);letter-spacing:1.5px;font-weight:500}
+/* 결과 — 카드 이미지 + 해설 나란히 */
+.rblk{background:rgba(0,0,0,.3);border-radius:8px;padding:1.5rem;margin-bottom:1.25rem;border:1px solid rgba(212,175,55,.15);position:relative;overflow:hidden}
+.rblk::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--gold),var(--gs))}
+.rblk-inner{display:flex;gap:1.25rem;align-items:flex-start}
+.rblk-card{flex-shrink:0;width:100px}
+.rblk-card-img{width:100%;aspect-ratio:2/3;border-radius:6px;overflow:hidden;border:1px solid var(--gold);box-shadow:0 4px 16px rgba(0,0,0,.5),0 0 12px rgba(212,175,55,.2);margin-bottom:8px}
+.rblk-card-img svg,.rblk-card-img img{width:100%;height:100%;display:block;object-fit:cover}
+.rblk-card-img.rev svg,.rblk-card-img.rev img{transform:rotate(180deg)}
+.rblk-card-name{font-family:var(--serif);font-size:12px;font-weight:700;color:var(--cr);text-align:center;line-height:1.4}
+.rblk-card-en{font-size:11px;color:var(--td);text-align:center;margin-top:2px;font-style:italic}
+.rblk-rev-badge{display:inline-block;font-size:10px;color:var(--red);border:1px solid var(--red);border-radius:3px;padding:1px 5px;margin-top:3px;font-family:var(--sans)}
+.rblk-content{flex:1;min-width:0}
+.rhd{font-family:var(--disp);font-size:12px;color:var(--gold);letter-spacing:1.5px;margin-bottom:12px;text-transform:uppercase;font-weight:500;display:flex;align-items:center;gap:6px}
+.rhd::before{content:'◆';font-size:8px;opacity:.7}
+.rblk-content p{font-family:var(--serif);font-size:16px;color:var(--cr);line-height:2.0}
+@media(max-width:480px){
+  .rblk-inner{flex-direction:column;gap:1rem}
+  .rblk-card{width:100%;display:flex;align-items:center;gap:12px}
+  .rblk-card-img{width:70px;margin-bottom:0;flex-shrink:0}
+  .rblk-card-name,.rblk-card-en{text-align:left}
+}
+.overall{background:linear-gradient(135deg,var(--pd),var(--navy));border:1px solid var(--gold);border-radius:4px;padding:1.75rem;margin-bottom:1rem;position:relative;box-shadow:0 0 24px rgba(212,175,55,.15)}
+.overall::before,.overall::after{content:'';position:absolute;width:16px;height:16px;border:1px solid var(--gold)}
+.overall::before{top:-1px;left:-1px;border-right:none;border-bottom:none}
+.overall::after{bottom:-1px;right:-1px;border-left:none;border-top:none}
+.ohd{font-family:var(--disp);font-size:16px;color:var(--gb);letter-spacing:2px;margin-bottom:14px;font-weight:600}
+.overall p{font-family:var(--serif);font-size:18px;color:var(--cr);line-height:2.1}
+.loading{text-align:center;padding:3rem 1rem;color:var(--cd);font-family:var(--serif);font-size:16px}
+.dots{display:flex;gap:8px;justify-content:center;padding:1.5rem 0}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--gold);animation:pulse 1.4s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
+.resetbtn{width:100%;padding:15px;font-family:var(--disp);font-size:14px;letter-spacing:2.5px;border:1px solid rgba(212,175,55,.3);border-radius:3px;background:transparent;color:var(--cd);cursor:pointer;margin-top:8px;transition:all .2s;text-transform:uppercase;font-weight:500}
+.resetbtn:hover{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,.05)}
+.err{background:rgba(232,90,90,.1);border:1px solid rgba(232,90,90,.3);border-radius:4px;padding:1.25rem;color:var(--red);font-size:16px;text-align:center;line-height:1.8;font-family:var(--sans)}
+@media(max-width:480px){body{padding:24px 14px;font-size:16px}.logo h1{font-size:28px;letter-spacing:3px}.stab .sb{display:none}.mdisp{font-size:28px;letter-spacing:10px;padding:14px}.fc{width:50px;height:82px}.rblk p{font-size:16px}.overall p{font-size:16px}}
+footer{text-align:center;margin-top:2.5rem;color:var(--td);font-size:13px;line-height:1.9;font-family:var(--sans)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="logo">
+    <div class="logo-icon">🌙</div>
+    <h1>TAROT BY MBTI</h1>
+    <p>당신의 유형이 카드에 말을 건넵니다</p>
+  </div>
+
+  <div id="step1">
+    <div class="box">
+      <div class="slbl">나의 MBTI</div>
+      <div class="mgrid">
+        <div><div class="mgl">에너지</div><div class="mrow"><button class="mbtn" data-g="EI" data-v="E">E</button><button class="mbtn" data-g="EI" data-v="I">I</button></div></div>
+        <div><div class="mgl">인식</div><div class="mrow"><button class="mbtn" data-g="SN" data-v="S">S</button><button class="mbtn" data-g="SN" data-v="N">N</button></div></div>
+        <div><div class="mgl">판단</div><div class="mrow"><button class="mbtn" data-g="TF" data-v="T">T</button><button class="mbtn" data-g="TF" data-v="F">F</button></div></div>
+        <div><div class="mgl">생활양식</div><div class="mrow"><button class="mbtn" data-g="JP" data-v="J">J</button><button class="mbtn" data-g="JP" data-v="P">P</button></div></div>
+      </div>
+      <div class="mdisp" id="mdisp">? &nbsp; ? &nbsp; ? &nbsp; ?</div>
+    </div>
+
+    <div class="box">
+      <div class="slbl">리딩 방법 선택</div>
+      <div class="stabs" id="stabs">
+        <button class="stab" data-sp="time" data-lb="과거|현재|미래"><span class="mn">⏳ 과거·현재·미래</span><span class="sb">시간의 흐름으로 보기</span></button>
+        <button class="stab" data-sp="problem" data-lb="원인|현재 상황|해결책"><span class="mn">🔍 원인·상황·해결</span><span class="sb">왜 이렇게 됐을까?</span></button>
+        <button class="stab" data-sp="choice" data-lb="A 선택|B 선택|조언"><span class="mn">🤔 A냐 B냐</span><span class="sb">선택의 기로에서</span></button>
+        <button class="stab" data-sp="relation" data-lb="나의 마음|상대의 마음|우리 사이"><span class="mn">💭 나·상대·우리</span><span class="sb">두 마음을 들여다보기</span></button>
+      </div>
+    </div>
+
+    <div class="q-box">
+      <div class="q-title">당신의 이야기와 질문</div>
+      <div class="q-desc">카드는 구체적인 사연을 가진 사람에게 더 깊이 말을 건넵니다.<br>지금 마음속에 담아둔 이야기를 편하게 털어놓아 주세요.</div>
+      <div class="q-guide">
+        <div class="q-guide-item"><span class="icon">💬</span><span>지금 가장 힘든 상황이나 고민이 뭔지 구체적으로 적어주세요</span></div>
+        <div class="q-guide-item"><span class="icon">🕐</span><span>언제부터 시작된 일인지, 어떤 감정을 느끼고 있는지도 함께 써주시면 좋아요</span></div>
+        <div class="q-guide-item"><span class="icon">🎯</span><span>카드에게 가장 듣고 싶은 답이 무엇인지 마지막에 적어주세요</span></div>
+      </div>
+      <textarea id="q" placeholder="예) 3년 사귄 남자친구와 결혼을 앞두고 있는데 요즘 자꾸 불안해요. 저는 그 사람을 분명히 사랑하는데, 결혼 후 제 꿈을 포기해야 할 것 같다는 생각에 밤마다 잠을 못 자요. 주변에서는 빨리 결정하라고 하는데, 진짜 내 마음이 뭔지 모르겠어요. 이 선택이 맞는 건지, 카드에서 답을 찾고 싶어요."></textarea>
+      <div class="q-tip">✦ 사연이 구체적일수록 카드가 더 정확하게 당신에게 말합니다</div>
+    </div>
+
+    <div class="box" id="fanBox" style="display:none">
+      <div class="flbl">✦ 카드를 3장 골라주세요</div>
+      <div class="fsub">선택한 카드를 다시 클릭하면 취소돼요</div>
+      <div class="hint">💡 78장의 카드가 4개 덱(21·21·21·15장)으로 나뉘어 있어요. ◀ ▶ 또는 1/2/3/4 버튼으로 덱을 넘기며 골라보세요.</div>
+      <div class="dnav">
+        <button class="darr" id="prev">‹</button>
+        <div class="ddots" id="ddots"></div>
+        <button class="darr" id="next">›</button>
+      </div>
+      <div class="fprog">선택한 카드: <span id="pcnt">0</span> / 3장</div>
+      <div class="fwrap" id="fwrap"></div>
+      <div class="slots" id="slots"></div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:.75rem">
+      <div class="pbadge">✦ 3장 스프레드 리딩 · 500원 ✦</div>
+    </div>
+    <button class="gobtn" id="goBtn" disabled>🔮 리딩 시작</button>
+  </div>
+
+  <div id="step2" style="display:none">
+    <div class="box">
+      <div id="loadArea" class="loading">
+        <div>당신의 사연을 카드가 읽고 있어요...</div>
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <div id="resArea" style="display:none">
+        <div id="reading"></div>
+      </div>
+    </div>
+    <button class="resetbtn" id="resetBtn">⟲ 처음부터 다시</button>
+  </div>
+
+  <footer>
+    카드 이미지: 1909 Rider-Waite-Smith Tarot Deck (Public Domain)<br>
+    글꼴: Pretendard · Gowun Batang · Cinzel (SIL Open Font License)<br>
+    Made with 🌙 by Tarot by MBTI
+  </footer>
+</div>
+
+<script>
+const IMG = {"m0": "https://upload.wikimedia.org/wikipedia/commons/9/90/RWS_Tarot_00_Fool.jpg", "m1": "https://upload.wikimedia.org/wikipedia/commons/d/de/RWS_Tarot_01_Magician.jpg", "m2": "https://upload.wikimedia.org/wikipedia/commons/8/88/RWS_Tarot_02_High_Priestess.jpg", "m3": "https://upload.wikimedia.org/wikipedia/commons/d/d2/RWS_Tarot_03_Empress.jpg", "m4": "https://upload.wikimedia.org/wikipedia/commons/c/c3/RWS_Tarot_04_Emperor.jpg", "m5": "https://upload.wikimedia.org/wikipedia/commons/8/8d/RWS_Tarot_05_Hierophant.jpg", "m6": "https://upload.wikimedia.org/wikipedia/commons/3/3a/TheLovers.jpg", "m7": "https://upload.wikimedia.org/wikipedia/commons/9/9b/RWS_Tarot_07_Chariot.jpg", "m8": "https://upload.wikimedia.org/wikipedia/commons/f/f5/RWS_Tarot_08_Strength.jpg", "m9": "https://upload.wikimedia.org/wikipedia/commons/4/4d/RWS_Tarot_09_Hermit.jpg", "m10": "https://upload.wikimedia.org/wikipedia/commons/3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg", "m11": "https://upload.wikimedia.org/wikipedia/commons/e/e0/RWS_Tarot_11_Justice.jpg", "m12": "https://upload.wikimedia.org/wikipedia/commons/2/2b/RWS_Tarot_12_Hanged_Man.jpg", "m13": "https://upload.wikimedia.org/wikipedia/commons/d/d7/RWS_Tarot_13_Death.jpg", "m14": "https://upload.wikimedia.org/wikipedia/commons/f/f8/RWS_Tarot_14_Temperance.jpg", "m15": "https://upload.wikimedia.org/wikipedia/commons/5/55/RWS_Tarot_15_Devil.jpg", "m16": "https://upload.wikimedia.org/wikipedia/commons/5/53/RWS_Tarot_16_Tower.jpg", "m17": "https://upload.wikimedia.org/wikipedia/commons/d/db/RWS_Tarot_17_Star.jpg", "m18": "https://upload.wikimedia.org/wikipedia/commons/7/7f/RWS_Tarot_18_Moon.jpg", "m19": "https://upload.wikimedia.org/wikipedia/commons/1/17/RWS_Tarot_19_Sun.jpg", "m20": "https://upload.wikimedia.org/wikipedia/commons/d/dd/RWS_Tarot_20_Judgement.jpg", "m21": "https://upload.wikimedia.org/wikipedia/commons/f/ff/RWS_Tarot_21_World.jpg", "w0": "https://upload.wikimedia.org/wikipedia/commons/1/11/Wands01.jpg", "w1": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Wands02.jpg", "w2": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Wands03.jpg", "w3": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Wands04.jpg", "w4": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Wands05.jpg", "w5": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Wands06.jpg", "w6": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Wands07.jpg", "w7": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Wands08.jpg", "w8": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Wands09.jpg", "w9": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Wands10.jpg", "w10": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Wands11.jpg", "w11": "https://upload.wikimedia.org/wikipedia/commons/1/16/Wands12.jpg", "w12": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Wands13.jpg", "w13": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Wands14.jpg", "c0": "https://upload.wikimedia.org/wikipedia/commons/3/36/Cups01.jpg", "c1": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Cups02.jpg", "c2": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Cups03.jpg", "c3": "https://upload.wikimedia.org/wikipedia/commons/3/35/Cups04.jpg", "c4": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Cups05.jpg", "c5": "https://upload.wikimedia.org/wikipedia/commons/1/17/Cups06.jpg", "c6": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Cups07.jpg", "c7": "https://upload.wikimedia.org/wikipedia/commons/6/60/Cups08.jpg", "c8": "https://upload.wikimedia.org/wikipedia/commons/2/24/Cups09.jpg", "c9": "https://upload.wikimedia.org/wikipedia/commons/8/84/Cups10.jpg", "c10": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Cups11.jpg", "c11": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Cups12.jpg", "c12": "https://upload.wikimedia.org/wikipedia/commons/6/62/Cups13.jpg", "c13": "https://upload.wikimedia.org/wikipedia/commons/0/04/Cups14.jpg", "s0": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Swords01.jpg", "s1": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Swords02.jpg", "s2": "https://upload.wikimedia.org/wikipedia/commons/0/02/Swords03.jpg", "s3": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Swords04.jpg", "s4": "https://upload.wikimedia.org/wikipedia/commons/2/23/Swords05.jpg", "s5": "https://upload.wikimedia.org/wikipedia/commons/2/29/Swords06.jpg", "s6": "https://upload.wikimedia.org/wikipedia/commons/3/34/Swords07.jpg", "s7": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Swords08.jpg", "s8": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Swords09.jpg", "s9": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Swords10.jpg", "s10": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Swords11.jpg", "s11": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Swords12.jpg", "s12": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Swords13.jpg", "s13": "https://upload.wikimedia.org/wikipedia/commons/3/33/Swords14.jpg", "p0": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Pents01.jpg", "p1": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Pents02.jpg", "p2": "https://upload.wikimedia.org/wikipedia/commons/4/42/Pents03.jpg", "p3": "https://upload.wikimedia.org/wikipedia/commons/3/35/Pents04.jpg", "p4": "https://upload.wikimedia.org/wikipedia/commons/9/96/Pents05.jpg", "p5": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Pents06.jpg", "p6": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Pents07.jpg", "p7": "https://upload.wikimedia.org/wikipedia/commons/4/49/Pents08.jpg", "p8": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Pents09.jpg", "p9": "https://upload.wikimedia.org/wikipedia/commons/4/42/Pents10.jpg", "p10": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Pents11.jpg", "p11": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Pents12.jpg", "p12": "https://upload.wikimedia.org/wikipedia/commons/8/88/Pents13.jpg", "p13": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Pents14.jpg"};
+
+const DECK = [];
+[["광대","The Fool","0"],["마법사","The Magician","I"],["여사제","The High Priestess","II"],["여황제","The Empress","III"],["황제","The Emperor","IV"],["교황","The Hierophant","V"],["연인","The Lovers","VI"],["전차","The Chariot","VII"],["힘","Strength","VIII"],["은둔자","The Hermit","IX"],["운명의 수레바퀴","Wheel of Fortune","X"],["정의","Justice","XI"],["매달린 사람","The Hanged Man","XII"],["죽음","Death","XIII"],["절제","Temperance","XIV"],["악마","The Devil","XV"],["탑","The Tower","XVI"],["별","The Star","XVII"],["달","The Moon","XVIII"],["태양","The Sun","XIX"],["심판","Judgement","XX"],["세계","The World","XXI"]]
+  .forEach(([n,e,s],i)=>DECK.push({name:n,en:e,sym:s,id:'m'+i,suit:'메이저'}));
+[{k:'완드',e:'Wands',p:'w'},{k:'컵',e:'Cups',p:'c'},{k:'소드',e:'Swords',p:'s'},{k:'펜타클',e:'Pentacles',p:'p'}]
+  .forEach(s=>[["에이스","Ace"],["2","Two"],["3","Three"],["4","Four"],["5","Five"],["6","Six"],["7","Seven"],["8","Eight"],["9","Nine"],["10","Ten"],["페이지","Page"],["나이트","Knight"],["퀸","Queen"],["킹","King"]]
+  .forEach(([rk,re],ri)=>DECK.push({name:s.k+'의 '+rk,en:re+' of '+s.e,sym:rk==='에이스'?'A':rk.length<=2?rk:rk[0],id:s.p+ri,suit:s.k})));
+
+const TRAITS={E:'외향적이고 표현력이 풍부한 E형',I:'내향적이고 깊이 사고하는 I형',S:'현실적이고 실용적인 S형',N:'직관적이고 가능성을 탐구하는 N형',T:'논리적이고 분석적인 T형',F:'감성적이고 공감 능력이 뛰어난 F형',J:'계획적이고 체계적인 J형',P:'유연하고 즉흥적인 P형'};
+const SPNAMES={time:'과거·현재·미래 스프레드',problem:'원인·상황·해결 스프레드',choice:'A·B 선택 스프레드',relation:'심리 관계 스프레드'};
+const DSIZES=[21,21,21,15];
+const SC={메이저:{b1:'#1a0f3d',b2:'#3d1a6e',a:'#f0c040'},완드:{b1:'#3d1a00',b2:'#7a3500',a:'#ff8c00'},컵:{b1:'#001f3d',b2:'#003d7a',a:'#4fc3f7'},소드:{b1:'#1a2540',b2:'#3a4a70',a:'#cfd8e4'},펜타클:{b1:'#0a2510',b2:'#1a4a25',a:'#7dd87d'}};
+// API 키는 서버(api/reading.js)에서 관리됩니다
+
+let sel={EI:null,SN:null,TF:null,JP:null};
+let curSp='time',curLb=['과거','현재','미래'];
+let decks=[],di=0,picked=[];
+
+function backSVG(){return `<svg viewBox="0 0 60 96"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a0a1f"/><stop offset="50%" stop-color="#2d1b69"/><stop offset="100%" stop-color="#0a0a1f"/></linearGradient><pattern id="dp" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r=".5" fill="rgba(212,175,55,.15)"/></pattern></defs><rect width="60" height="96" fill="url(#bg)"/><rect width="60" height="96" fill="url(#dp)"/><rect x="3" y="3" width="54" height="90" rx="2" fill="none" stroke="rgba(212,175,55,.5)"/><g transform="translate(30,48)"><circle r="16" fill="none" stroke="rgba(212,175,55,.45)" stroke-width=".8"/><circle r="10" fill="none" stroke="rgba(212,175,55,.25)" stroke-width=".5"/><polygon points="0,-12 3,-4 11,-4 5,1 7,9 0,4 -7,9 -5,1 -11,-4 -3,-4" fill="rgba(212,175,55,.6)" stroke="rgba(212,175,55,.9)" stroke-width=".3"/></g></svg>`;}
+
+function frontEl(card){
+  const url=IMG[card.id];
+  if(url){const img=document.createElement('img');img.src=url;img.alt=card.name;return img;}
+  const sc=SC[card.suit],gid='g'+card.id+Math.random().toString(36).slice(2,5);
+  const d=document.createElement('div');
+  d.innerHTML=`<svg viewBox="0 0 60 96"><defs><linearGradient id="${gid}" x1="0" y1="0" x2=".7" y2="1"><stop offset="0%" stop-color="${sc.b1}"/><stop offset="100%" stop-color="${sc.b2}"/></linearGradient></defs><rect width="60" height="96" fill="url(#${gid})"/><rect x="3" y="3" width="54" height="90" rx="2" fill="none" stroke="${sc.a}" stroke-width=".8" opacity=".6"/><text x="7" y="13" font-size="6" fill="${sc.a}" font-weight="bold">${card.sym}</text><g transform="translate(30,46)"><circle r="14" fill="none" stroke="${sc.a}" stroke-width=".8" opacity=".5"/><text font-size="20" fill="${sc.a}" text-anchor="middle" dominant-baseline="middle">✦</text></g><rect x="6" y="74" width="48" height="14" rx="2" fill="rgba(0,0,0,.5)"/><text x="30" y="83" font-size="6" fill="${sc.a}" text-anchor="middle" font-weight="600">${card.name.length>8?card.name.slice(0,7)+'…':card.name}</text></svg>`;
+  return d.firstChild;
+}
+
+document.querySelectorAll('.mbtn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('[data-g="'+b.dataset.g+'"]').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');sel[b.dataset.g]=b.dataset.v;
+  const d=document.getElementById('mdisp');
+  d.textContent=[sel.EI||'?',sel.SN||'?',sel.TF||'?',sel.JP||'?'].join('  ');
+  d.classList.toggle('done',Object.values(sel).every(v=>v));
+  check();
+}));
+
+function selTab(t){
+  document.querySelectorAll('.stab').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');curSp=t.dataset.sp;curLb=t.dataset.lb.split('|');
+  if(document.getElementById('fanBox').style.display!=='none') renderSlots();
+}
+document.querySelectorAll('.stab').forEach(t=>t.addEventListener('click',()=>selTab(t)));
+selTab(document.querySelector('.stab'));
+
+document.getElementById('q').addEventListener('input',check);
+document.getElementById('prev').addEventListener('click',()=>changeDeck(-1));
+document.getElementById('next').addEventListener('click',()=>changeDeck(1));
+document.getElementById('goBtn').addEventListener('click',startReading);
+document.getElementById('resetBtn').addEventListener('click',reset);
+
+function check(){
+  const ok=Object.values(sel).every(v=>v)&&document.getElementById('q').value.trim().length>10;
+  const fb=document.getElementById('fanBox');
+  if(ok&&fb.style.display==='none'){fb.style.display='block';initDecks();}
+  document.getElementById('goBtn').disabled=!(ok&&picked.length===3);
+}
+
+function initDecks(){
+  const sh=[...DECK].sort(()=>Math.random()-.5);
+  decks=[];let p=0;
+  DSIZES.forEach(n=>{decks.push(sh.slice(p,p+n));p+=n;});
+  picked=[];di=0;renderDots();renderFan();renderSlots();
+  document.getElementById('pcnt').textContent='0';
+}
+
+function renderDots(){
+  document.getElementById('ddots').innerHTML=DSIZES.map((_,i)=>{
+    const n=picked.filter(p=>p.di===i).length;
+    return `<button class="ddot${i===di?' on':''}" onclick="goTo(${i})">${i+1}${n?`<span class="bdg">${n}</span>`:''}`;
+  }).join('');
+  document.getElementById('prev').disabled=di===0;
+  document.getElementById('next').disabled=di===DSIZES.length-1;
+}
+
+function changeDeck(d){const n=di+d;if(n>=0&&n<DSIZES.length){di=n;renderDots();renderFan();}}
+function goTo(i){di=i;renderDots();renderFan();}
+
+function renderFan(){
+  const deck=decks[di],wrap=document.getElementById('fwrap');
+  wrap.innerHTML='';
+  const total=deck.length,range=Math.min(140,total*7),start=-range/2;
+  for(let i=0;i<total;i++){
+    const angle=total>1?start+(range/(total-1))*i:0;
+    const el=document.createElement('div');
+    el.className='fc';el.style.transform=`rotate(${angle}deg)`;el.style.zIndex=i;
+    el.innerHTML=backSVG();
+    if(picked.some(p=>p.di===di&&p.ci===i)) el.classList.add('used');
+    el.addEventListener('click',(idx=>()=>pick(idx))(i));
+    wrap.appendChild(el);
+  }
+}
+
+function pick(idx){
+  if(picked.length>=3||picked.some(p=>p.di===di&&p.ci===idx)) return;
+  picked.push({card:{...decks[di][idx],rev:Math.random()>.72},di,ci:idx});
+  document.getElementById('pcnt').textContent=picked.length;
+  renderFan();renderDots();renderSlots();
+  document.getElementById('goBtn').disabled=picked.length!==3;
+}
+
+function cancel(i){
+  picked.splice(i,1);
+  document.getElementById('pcnt').textContent=picked.length;
+  renderFan();renderDots();renderSlots();
+  document.getElementById('goBtn').disabled=true;
+}
+
+function renderSlots(){
+  const wrap=document.getElementById('slots');
+  wrap.innerHTML=curLb.map((lb,i)=>{
+    const p=picked[i],c=p?p.card:null;
+    return `<div class="slot"><div class="slotl">${lb}</div><div class="slotc${c?' on':''}${c&&c.rev?' rev':''}" ${c?`onclick="cancel(${i})"`:''} id="sl${i}">${c?'':'＋'}${c?'<div class="cov"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>취소</div>':''}</div>${c?`<div class="sname">${c.name}${c.rev?' ↕역':''}</div>`:''}</div>`;
+  }).join('');
+  curLb.forEach((_,i)=>{
+    const p=picked[i];if(!p)return;
+    const el=document.getElementById('sl'+i);
+    if(el) el.insertBefore(frontEl(p.card),el.firstChild);
+  });
+}
+
+async function startReading(){
+  const mbti=[sel.EI,sel.SN,sel.TF,sel.JP].join('');
+  const story=document.getElementById('q').value.trim();
+  const traits=[sel.EI,sel.SN,sel.TF,sel.JP].map(l=>TRAITS[l]).join(', ');
+  const cards=picked.map(p=>p.card);
+  const desc=cards.map((c,i)=>`[${curLb[i]}] ${c.name}${c.rev?' (역방향)':''} (${c.suit} 수트)`).join('\n');
+
+  document.getElementById('step1').style.display='none';
+  document.getElementById('step2').style.display='block';
+  document.getElementById('loadArea').style.display='block';
+  document.getElementById('resArea').style.display='none';
+
+  try{
+    // ✅ /api/reading 서버리스 함수 호출 (API 키 서버에서 관리)
+    const res = await fetch('/api/reading', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        mbti,
+        traits,
+        question: story,
+        spreadName: SPNAMES[curSp],
+        cardDesc: desc,
+        curLabels: curLb
+      })
+    });
+    if (!res.ok) { const t = await res.text(); throw new Error(`서버 오류(${res.status}): ${t}`); }
+    const data = await res.json();
+    let r;
+    try { r = data.reading; }
+    catch { r = {card1:'해석 오류',card2:'',card3:'',overall:'다시 시도해주세요.'}; }
+
+    document.getElementById('loadArea').style.display='none';
+    document.getElementById('resArea').style.display='block';
+
+    
+    // 카드 이미지 + 해설 나란히
+    const readingEl = document.getElementById('reading');
+    readingEl.innerHTML = '';
+    ['Ⅰ','Ⅱ','Ⅲ'].forEach((sym,i) => {
+      const c = cards[i];
+      const blk = document.createElement('div');
+      blk.className = 'rblk';
+      blk.innerHTML = `
+        <div class="rblk-inner">
+          <div class="rblk-card">
+            <div class="rblk-card-img${c.rev?' rev':''}" id="rimg${i}"></div>
+            <div class="rblk-card-name">${c.name}</div>
+            <div class="rblk-card-en">${c.en}</div>
+            ${c.rev?'<div style="text-align:center"><span class="rblk-rev-badge">↕ 역방향</span></div>':''}
+          </div>
+          <div class="rblk-content">
+            <div class="rhd">${sym} ${curLb[i]}</div>
+            <p>${r['card'+(i+1)]}</p>
+          </div>
+        </div>`;
+      readingEl.appendChild(blk);
+      const imgSlot = blk.querySelector('#rimg'+i);
+      if(imgSlot) imgSlot.appendChild(frontEl(c));
+    });
+    const overallDiv = document.createElement('div');
+    overallDiv.className = 'overall';
+    overallDiv.innerHTML = `<div class="ohd">✦ ${mbti}를 위한 종합 메시지</div><p>${r.overall}</p>`;
+    readingEl.appendChild(overallDiv);
+  }catch(e){
+    document.getElementById('loadArea').innerHTML=`<div class="err">리딩을 불러오지 못했어요 😢<br><small style="color:#8a85a8">${e.message}</small></div>`;
+  }
+}
+
+function reset(){
+  document.getElementById('step1').style.display='block';
+  document.getElementById('step2').style.display='none';
+  document.getElementById('loadArea').style.display='block';
+  document.getElementById('resArea').style.display='none';
+  document.getElementById('q').value='';
+  document.getElementById('fanBox').style.display='none';
+  document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('on'));
+  sel={EI:null,SN:null,TF:null,JP:null};picked=[];
+  const d=document.getElementById('mdisp');d.textContent='?   ?   ?   ?';d.classList.remove('done');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
